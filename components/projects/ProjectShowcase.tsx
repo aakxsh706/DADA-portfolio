@@ -7,6 +7,8 @@ import { gsap } from '@/lib/gsap';
 import { cn } from '@/lib/utils';
 import TransitionLink from '@/components/layout/TransitionLink';
 import ImageReveal from '@/components/animations/ImageReveal';
+import ParallaxFrame from '@/components/animations/ParallaxFrame';
+import { aspectStyle, frameEdge } from '@/lib/images';
 import MagneticButton from '@/components/ui/MagneticButton';
 import ArrowIcon from '@/components/ui/ArrowIcon';
 import ProjectVisual from './ProjectVisual';
@@ -39,14 +41,15 @@ function Visual({
   aspect,
   className,
   sizes,
-  image,
-  speed,
+  image = project.cover,
+  speed = 0.6,
   delay,
   compact,
 }: {
   project: Project;
   href: string;
   from: RevealFrom;
+  /** Design aspect used only when the project has no screenshot yet. */
   aspect: string;
   className?: string;
   sizes?: string;
@@ -56,20 +59,27 @@ function Visual({
   compact?: boolean;
 }) {
   return (
-    <TransitionLink
-      href={href}
-      className={cn('group/visual relative block', className)}
-      aria-label={`View project: ${project.title}`}
-      data-cursor="view"
-    >
-      <ImageReveal from={from} className={cn('relative w-full', aspect)} delay={delay}>
-        <div className="absolute inset-0">
-          <div className="h-full w-full transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover/visual:scale-[1.03]">
-            <ProjectVisual project={project} image={image} sizes={sizes} speed={speed} compact={compact} />
+    <ParallaxFrame speed={speed} className={className}>
+      <TransitionLink
+        href={href}
+        className="group/visual relative block"
+        aria-label={`View project: ${project.title}`}
+        data-cursor="view"
+      >
+        <ImageReveal
+          from={from}
+          className={cn('relative w-full', !image && aspect, image && frameEdge)}
+          style={aspectStyle(image)}
+          delay={delay}
+        >
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover/visual:scale-[1.02]">
+              <ProjectVisual project={project} image={image} sizes={sizes} compact={compact} />
+            </div>
           </div>
-        </div>
-      </ImageReveal>
-    </TransitionLink>
+        </ImageReveal>
+      </TransitionLink>
+    </ParallaxFrame>
   );
 }
 
@@ -149,8 +159,9 @@ function ProjectItem({ project, index }: { project: Project; index: number }) {
           project={project}
           href={href}
           from={from}
-          aspect="aspect-[4/3] md:aspect-[16/9] xl:aspect-[21/9]"
+          aspect="aspect-[4/3] md:aspect-[16/9]"
           sizes="100vw"
+          speed={0.4}
         />
         <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:items-end">
           <div className="pj-meta lg:col-span-3">
@@ -187,11 +198,11 @@ function ProjectItem({ project, index }: { project: Project; index: number }) {
               project={project}
               href={href}
               from="bottom"
-              aspect="aspect-[9/16]"
+              aspect="aspect-[9/19]"
               className="mt-12 hidden w-[42%] lg:block"
               image={project.previews[0]}
               sizes="20vw"
-              speed={0.3}
+              speed={0.9}
               delay={0.15}
             />
           ) : null}
@@ -203,6 +214,7 @@ function ProjectItem({ project, index }: { project: Project; index: number }) {
             from={from}
             aspect="aspect-[4/3] lg:aspect-[4/5]"
             sizes="(min-width: 1024px) 58vw, 100vw"
+            speed={0.5}
           />
         </div>
       </article>
@@ -213,7 +225,7 @@ function ProjectItem({ project, index }: { project: Project; index: number }) {
   return (
     <article ref={ref} className="container-x grid gap-10 lg:grid-cols-12 lg:gap-8">
       <div className={cn('lg:col-span-8', imageLeft ? 'lg:order-1' : 'lg:order-2')}>
-        <Visual project={project} href={href} from={from} aspect="aspect-[4/3] lg:aspect-[16/10]" />
+        <Visual project={project} href={href} from={from} aspect="aspect-[4/3] lg:aspect-[16/10]" speed={0.5} />
       </div>
       <div className={cn('flex lg:col-span-4 lg:items-end', imageLeft ? 'lg:order-2' : 'lg:order-1')}>
         <Meta project={project} href={href} />

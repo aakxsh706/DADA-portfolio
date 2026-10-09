@@ -2,6 +2,9 @@ import type { Project } from '@/data/projects';
 import TransitionLink from '@/components/layout/TransitionLink';
 import ProjectVisual from './ProjectVisual';
 import ArrowIcon from '@/components/ui/ArrowIcon';
+import ParallaxFrame from '@/components/animations/ParallaxFrame';
+import { aspectStyle, frameEdge } from '@/lib/images';
+import { cn } from '@/lib/utils';
 
 export default function NextProject({ project }: { project: Project }) {
   return (
@@ -24,11 +27,16 @@ export default function NextProject({ project }: { project: Project }) {
             <ArrowIcon direction="right" />
           </p>
         </div>
-        <div className="relative aspect-[4/3] overflow-hidden md:col-span-5">
-          <div className="absolute inset-0 transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]">
-            <ProjectVisual project={project} sizes="(min-width: 768px) 40vw, 100vw" speed={0.25} compact />
+        <ParallaxFrame speed={0.4} className="md:col-span-5">
+          <div
+            className={cn('relative overflow-hidden', !project.cover && 'aspect-[4/3]', project.cover && frameEdge)}
+            style={aspectStyle(project.cover)}
+          >
+            <div className="absolute inset-0 transition-transform duration-[1.2s] ease-[var(--ease-out-expo)] group-hover:scale-[1.02]">
+              <ProjectVisual project={project} sizes="(min-width: 768px) 40vw, 100vw" compact />
+            </div>
           </div>
-        </div>
+        </ParallaxFrame>
       </TransitionLink>
     </section>
   );

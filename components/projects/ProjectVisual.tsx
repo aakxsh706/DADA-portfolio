@@ -24,7 +24,7 @@ export default function ProjectVisual({
   className,
   sizes = '(min-width: 1024px) 66vw, 100vw',
   priority = false,
-  speed = 0.5,
+  speed = 0,
   compact = false,
 }: Props) {
   if (!image) {
@@ -43,6 +43,7 @@ export default function ProjectVisual({
       priority={priority}
       speed={speed}
       className={className}
+      imgClassName="object-top"
     />
   );
 }

@@ -8,11 +8,12 @@ import { projects } from '@/data/projects';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { desktopQuery } from '@/lib/motion';
 import { cn } from '@/lib/utils';
+import { frameEdge } from '@/lib/images';
 
 type Panel =
   | { kind: 'intro' }
   | { kind: 'text'; index: string; title: string; body: string }
-  | { kind: 'image'; src: string; alt: string; caption: string; portrait?: boolean };
+  | { kind: 'image'; src: string; alt: string; width: number; height: number; caption: string; portrait?: boolean };
 
 const capabilities = [
   ['Art direction', 'A clear visual idea first — type, rhythm, imagery — before a single component.'],
@@ -86,15 +87,16 @@ export default function HorizontalGallery() {
           },
         },
       });
-      gsap.utils.toArray<HTMLElement>('.hg-parallax', trackEl).forEach((img) => {
+      gsap.utils.toArray<HTMLElement>('.hg-figure', trackEl).forEach((figure, i) => {
+        const drift = 22 + (i % 2) * 14;
         gsap.fromTo(
-          img,
-          { xPercent: -8 },
+          figure,
+          { y: drift },
           {
-            xPercent: 8,
+            y: -drift,
             ease: 'none',
             scrollTrigger: {
-              trigger: img,
+              trigger: figure,
               containerAnimation: tween,
               start: 'left right',
               end: 'right left',
@@ -180,19 +182,21 @@ export default function HorizontalGallery() {
             <figure
               key={`${panel.src}-${index}`}
               className={cn(
-                'relative shrink-0 snap-start overflow-hidden',
+                'hg-figure relative shrink-0 snap-start overflow-hidden',
+                frameEdge,
                 panel.portrait
-                  ? 'aspect-[9/16] w-[62vw] sm:w-[36vw] lg:h-[62vh] lg:w-auto'
-                  : 'aspect-[16/10] w-[86vw] sm:w-[70vw] lg:h-[62vh] lg:w-auto',
+                  ? 'w-[58vw] sm:w-[34vw] lg:h-[62vh] lg:w-auto'
+                  : 'w-[86vw] sm:w-[70vw] lg:h-[62vh] lg:w-auto',
               )}
+              style={{ aspectRatio: `${panel.width} / ${panel.height}` }}
             >
-              <div className="hg-parallax absolute inset-[-10%]">
+              <div className="absolute inset-0">
                 <Image
                   src={panel.src}
                   alt={panel.alt}
                   fill
                   sizes="(min-width: 1024px) 60vw, 90vw"
-                  className="object-cover"
+                  className="object-cover object-top"
                 />
               </div>
               <figcaption className="absolute bottom-4 left-4 rounded-full bg-bg/80 px-3 py-1.5 text-xs uppercase tracking-[0.14em] text-fg backdrop-blur-sm">

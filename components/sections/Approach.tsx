@@ -8,12 +8,14 @@ import AnimatedHeading from '@/components/animations/AnimatedHeading';
 import TextReveal from '@/components/animations/TextReveal';
 import SectionTransition from '@/components/animations/SectionTransition';
 import ParallaxImage from '@/components/animations/ParallaxImage';
+import ParallaxFrame from '@/components/animations/ParallaxFrame';
+import { aspectStyle, frameEdge } from '@/lib/images';
 import ImageReveal from '@/components/animations/ImageReveal';
 import ArrowIcon from '@/components/ui/ArrowIcon';
 
 export default function Approach() {
   const list = useRef<HTMLUListElement>(null);
-  const preview = projects.find((p) => p.slug === 'belin-dentistry')?.previews?.[1];
+  const preview = projects.find((p) => p.slug === 'belin-dentistry')?.previews?.[0];
 
   useEffect(() => {
     const el = list.current;
@@ -48,17 +50,20 @@ export default function Approach() {
       <div className="container-x grid gap-16 lg:grid-cols-12">
         <div className="lg:col-span-4">
           {preview ? (
-            <ImageReveal from="bottom" className="aspect-[4/5] w-full max-w-sm">
-              <div className="absolute inset-0">
-                <ParallaxImage
-                  src={preview.src}
-                  alt={preview.alt}
-                  fill
-                  sizes="(min-width: 1024px) 30vw, 80vw"
-                  speed={0.7}
-                />
-              </div>
-            </ImageReveal>
+            <ParallaxFrame speed={0.8} className="w-full max-w-[18rem]">
+              <ImageReveal from="bottom" className={frameEdge} style={aspectStyle(preview)}>
+                <div className="absolute inset-0">
+                  <ParallaxImage
+                    src={preview.src}
+                    alt={preview.alt}
+                    fill
+                    sizes="(min-width: 1024px) 22vw, 70vw"
+                    speed={0}
+                    imgClassName="object-top"
+                  />
+                </div>
+              </ImageReveal>
+            </ParallaxFrame>
           ) : null}
           <p className="eyebrow mt-6">Studio practice — design, build, motion</p>
         </div>

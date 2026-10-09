@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { gsap } from '@/lib/gsap';
 import { cn } from '@/lib/utils';
 
 interface Props {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
   /** Edge the image is revealed from. */
   from?: 'bottom' | 'left' | 'right' | 'top';
   delay?: number;
@@ -27,6 +28,7 @@ const closed: Record<NonNullable<Props['from']>, string> = {
 export default function ImageReveal({
   children,
   className,
+  style,
   from = 'bottom',
   delay = 0,
   start = 'top 85%',
@@ -51,7 +53,7 @@ export default function ImageReveal({
   }, [from, delay, start, zoom]);
 
   return (
-    <div ref={ref} className={cn('relative overflow-hidden will-change-[clip-path]', className)}>
+    <div ref={ref} style={style} className={cn('relative overflow-hidden will-change-[clip-path]', className)}>
       {children}
     </div>
   );

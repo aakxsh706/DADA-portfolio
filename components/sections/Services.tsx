@@ -118,7 +118,7 @@ export default function Services() {
       {/* Floating hover visual */}
       <div
         ref={floater}
-        className="pointer-events-none absolute left-0 top-0 z-10 hidden h-[220px] w-[320px] -translate-x-1/2 -translate-y-1/2 scale-90 overflow-hidden rounded-2xl opacity-0 lg:block"
+        className="pointer-events-none absolute left-0 top-0 z-10 hidden h-[200px] w-[320px] -translate-x-1/2 -translate-y-1/2 scale-90 overflow-hidden rounded-2xl opacity-0 lg:block"
         aria-hidden="true"
       >
         {services.map((service, index) => (

@@ -6,6 +6,9 @@ import { siteConfig } from '@/data/site-config';
 import AnimatedHeading from '@/components/animations/AnimatedHeading';
 import TextReveal from '@/components/animations/TextReveal';
 import ImageReveal from '@/components/animations/ImageReveal';
+import ParallaxFrame from '@/components/animations/ParallaxFrame';
+import { aspectStyle, frameEdge } from '@/lib/images';
+import { cn } from '@/lib/utils';
 import ProjectVisual from '@/components/projects/ProjectVisual';
 import NextProject from '@/components/projects/NextProject';
 import MagneticButton from '@/components/ui/MagneticButton';
@@ -104,11 +107,18 @@ export default async function ProjectPage({ params }: { params: Params }) {
 
       {/* Hero image */}
       <div className="container-x">
-        <ImageReveal from="bottom" className="relative aspect-[4/3] w-full md:aspect-[16/9]" start="top 90%">
-          <div className="absolute inset-0">
-            <ProjectVisual project={project} sizes="100vw" priority speed={0.4} />
-          </div>
-        </ImageReveal>
+        <ParallaxFrame speed={0.35}>
+          <ImageReveal
+            from="bottom"
+            className={cn('relative w-full', !project.cover && 'aspect-[4/3] md:aspect-[16/9]', project.cover && frameEdge)}
+            style={aspectStyle(project.cover)}
+            start="top 90%"
+          >
+            <div className="absolute inset-0">
+              <ProjectVisual project={project} sizes="100vw" priority />
+            </div>
+          </ImageReveal>
+        </ParallaxFrame>
       </div>
 
       {/* Overview */}
@@ -158,27 +168,29 @@ export default async function ProjectPage({ params }: { params: Params }) {
         </h2>
         {project.previews && project.previews.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-12 md:items-start">
-            <ImageReveal from="left" className="relative aspect-[9/16] md:col-span-4">
-              <div className="absolute inset-0">
-                <ProjectVisual
-                  project={project}
-                  image={project.previews[0]}
-                  sizes="(min-width: 768px) 33vw, 100vw"
-                  speed={0.3}
-                />
-              </div>
-            </ImageReveal>
-            {project.previews[1] ? (
-              <ImageReveal from="right" className="relative aspect-[16/10] md:col-span-8 md:mt-24" delay={0.1}>
+            <ParallaxFrame speed={0.8} className="md:col-span-4">
+              <ImageReveal from="left" className={cn('relative', frameEdge)} style={aspectStyle(project.previews[0])}>
                 <div className="absolute inset-0">
                   <ProjectVisual
                     project={project}
-                    image={project.previews[1]}
-                    sizes="(min-width: 768px) 66vw, 100vw"
-                    speed={0.5}
+                    image={project.previews[0]}
+                    sizes="(min-width: 768px) 33vw, 100vw"
                   />
                 </div>
               </ImageReveal>
+            </ParallaxFrame>
+            {project.previews[1] ? (
+              <ParallaxFrame speed={0.4} className="md:col-span-8 md:mt-24">
+                <ImageReveal from="right" className={cn('relative', frameEdge)} style={aspectStyle(project.previews[1])} delay={0.1}>
+                  <div className="absolute inset-0">
+                    <ProjectVisual
+                      project={project}
+                      image={project.previews[1]}
+                      sizes="(min-width: 768px) 66vw, 100vw"
+                    />
+                  </div>
+                </ImageReveal>
+              </ParallaxFrame>
             ) : null}
           </div>
         ) : (
