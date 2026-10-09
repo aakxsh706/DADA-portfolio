@@ -1,0 +1,453 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ */
+/* Design tokens                                                        */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-bg: #101010;
+  --color-bg-elevated: #161616;
+  --color-fg: #f5f2eb;
+  --color-muted: #999999;
+  --color-accent: #d7ff45;
+  --color-line: rgba(245, 242, 235, 0.14);
+  --color-line-strong: rgba(245, 242, 235, 0.3);
+
+  --font-heading: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
+  --font-body: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-soft: cubic-bezier(0.25, 1, 0.5, 1);
+
+  --breakpoint-3xl: 112rem;
+}
+
+:root {
+  /* Fluid type scale */
+  --text-display: clamp(3.25rem, 11.5vw, 13.5rem);
+  --text-display-sm: clamp(2.75rem, 8.5vw, 9.5rem);
+  --text-h1: clamp(2.5rem, 6.5vw, 7rem);
+  --text-h2: clamp(2rem, 4.8vw, 5rem);
+  --text-h3: clamp(1.5rem, 2.6vw, 2.75rem);
+  --text-lead: clamp(1.125rem, 1.4vw, 1.5rem);
+  --text-body: clamp(1rem, 1.05vw, 1.125rem);
+  --text-small: 0.8125rem;
+  --text-eyebrow: 0.75rem;
+
+  --gutter: clamp(1.25rem, 4.5vw, 5rem);
+  --section-y: clamp(6rem, 14vw, 14rem);
+  --nav-height: 5rem;
+
+  --surface: var(--color-bg);
+  --ink: var(--color-fg);
+
+  color-scheme: dark;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                 */
+/* ------------------------------------------------------------------ */
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    min-height: 100dvh;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-heading {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  img,
+  video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Lenis                                                                */
+/* ------------------------------------------------------------------ */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------ */
+/* Progressive-enhancement reveal gate                                  */
+/* Elements with .will-reveal are hidden only when JS is running and   */
+/* motion is allowed; GSAP makes them visible as it animates them.     */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .will-reveal {
+    visibility: hidden;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities                                                            */
+/* ------------------------------------------------------------------ */
+@utility container-x {
+  padding-inline: var(--gutter);
+}
+
+@utility section-y {
+  padding-block: var(--section-y);
+}
+
+@utility eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+@utility text-display {
+  font-size: var(--text-display);
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+}
+
+@utility text-display-sm {
+  font-size: var(--text-display-sm);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+@utility text-h1 {
+  font-size: var(--text-h1);
+  line-height: 0.95;
+}
+
+@utility text-h2 {
+  font-size: var(--text-h2);
+  line-height: 0.98;
+}
+
+@utility text-h3 {
+  font-size: var(--text-h3);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+@utility text-lead {
+  font-size: var(--text-lead);
+  line-height: 1.5;
+}
+
+@utility hairline {
+  height: 1px;
+  background: var(--color-line);
+}
+
+@utility mask-lines {
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+/* Link underline that draws in from the left */
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -0.15em;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Text that flips upward on hover (two stacked copies) */
+.flip-text {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1.1;
+}
+.flip-text > span {
+  display: block;
+  transition: transform 0.55s var(--ease-out-expo);
+}
+.flip-text > span:last-child {
+  position: absolute;
+  inset: 0;
+  transform: translateY(105%);
+}
+.flip-text:hover > span:first-child,
+a:hover .flip-text > span:first-child,
+button:hover .flip-text > span:first-child {
+  transform: translateY(-105%);
+}
+.flip-text:hover > span:last-child,
+a:hover .flip-text > span:last-child,
+button:hover .flip-text > span:last-child {
+  transform: translateY(0);
+}
+
+/* Grain overlay: a small SVG noise tile so the GPU only composites one layer. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  mix-blend-mode: soft-light;
+}
+
+/* Pulsing availability dot */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(215, 255, 69, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(215, 255, 69, 0);
+  }
+}
+.pulse-dot {
+  animation: pulse-dot 2.4s var(--ease-soft) infinite;
+}
+
+/* Scroll indicator line */
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+.scroll-line {
+  animation: scroll-line 2.2s var(--ease-in-out-expo) infinite;
+}
+
+/* Custom cursor — only on fine pointers, never on touch */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  pointer-events: none;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-fg);
+  mix-blend-mode: difference;
+  will-change: transform;
+  opacity: 0;
+  transition:
+    width 0.45s var(--ease-out-expo),
+    height 0.45s var(--ease-out-expo),
+    margin 0.45s var(--ease-out-expo),
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    opacity 0.3s ease;
+}
+.cursor[data-visible='true'] {
+  opacity: 1;
+}
+.cursor[data-mode='hover'] {
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-color: rgba(245, 242, 235, 0.6);
+}
+.cursor[data-mode='view'] {
+  width: 112px;
+  height: 112px;
+  margin: -56px 0 0 -56px;
+  background: var(--color-fg);
+  border-color: var(--color-fg);
+  mix-blend-mode: normal;
+}
+.cursor[data-mode='hidden'] {
+  opacity: 0;
+}
+.cursor__label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--color-bg);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 0.3s ease,
+    transform 0.45s var(--ease-out-expo);
+}
+.cursor[data-mode='view'] .cursor__label {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Form fields */
+.field {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--color-line-strong);
+  padding: 1rem 0;
+  font-family: var(--font-body);
+  font-size: var(--text-lead);
+  color: var(--color-fg);
+  border-radius: 0;
+  transition: border-color 0.3s ease;
+}
+.field::placeholder {
+  color: rgba(153, 153, 153, 0.7);
+}
+.field:focus-visible {
+  outline: none;
+  border-bottom-color: var(--color-accent);
+}
+.field[aria-invalid='true'] {
+  border-bottom-color: #ff6b6b;
+}
+select.field {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23999999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  padding-right: 2rem;
+}
+select.field option {
+  background: var(--color-bg-elevated);
+  color: var(--color-fg);
+}
+
+/* Visually hidden helper for honeypots */
+.hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Light theme scope — swaps the palette for a section                  */
+/* ------------------------------------------------------------------ */
+.theme-light {
+  --color-bg: #f5f2eb;
+  --color-bg-elevated: #ebe7de;
+  --color-fg: #101010;
+  --color-muted: #6a6762;
+  --color-line: rgba(16, 16, 16, 0.14);
+  --color-line-strong: rgba(16, 16, 16, 0.32);
+  color-scheme: light;
+}
+.theme-light .field::placeholder {
+  color: rgba(106, 103, 98, 0.7);
+}
+.theme-light select.field option {
+  background: #f5f2eb;
+  color: #101010;
+}
+.theme-light ::selection {
+  background: #101010;
+  color: #d7ff45;
+}
